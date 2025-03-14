@@ -7,10 +7,12 @@
 
 
 #include <unordered_map>
+#include <cstring>
 #include <fcntl.h>       // fcntl()
 #include <unistd.h>      // close()
 #include <assert.h>
 #include <errno.h>
+#include <memory>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -19,16 +21,33 @@
 class HttpServer {
 public:
 	HttpServer(
-		int port,int trigMode,int timeoutMs, bool OptLinger,
-		int sqlPort,const char * sqlUser,const char * sqlPwd,
-		const char * dbName,int connPoolNum,int threads,
-		bool openLog,int logLevel,int logQueSize
-	);
+		int port, int trigMode, int timeoutMS, bool OptLinger,
+        int sqlPort, const char* sqlUser, const  char* sqlPwd,
+        const char* dbName, int connPoolNum, int threads,
+        bool openLog, int logLevel, int logQueSize);
 
-	~HttpServer();
-	void Start();
+	 ~HttpServer();
+    void Start();
+
 private:
-	bool InitSocket_();
+
+
+
+	static const int MAX_FD = 65536;
+
+	static int SetFdNonblock(int fd);
+
+	int port_;
+	int openLinger_;
+	int timeoutMS_;
+	bool isClose_;
+	int listenFd_;
+	char* srcDir_;
+
+	uint32_t listentEv_;
+	uint32_t connEv_;
+
+
 };
 
 
