@@ -17,6 +17,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "../timer/heaptimer.h"
+#include "../pool/threadpool.h"
 
 
 
@@ -51,7 +52,7 @@ private:
 	uint32_t connEv_;
 
 	std::unique_ptr<HeapTimer> timer_;
-
+	std::unique_ptr<ThreadPool> threadPool;
 };
 
 
