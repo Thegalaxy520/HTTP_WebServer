@@ -4,12 +4,12 @@
 
 #include "heaptimer.h"
 
-HeapTimer::~HeapTimer()
-{
-}
-
 void HeapTimer::Reschedule(int id, int newExpires)
 {
+	/* 调整指定id的结点 */
+	assert(!heap.empty() && ref.count(id) > 0);
+	heap[ref[id]].expires = Clock::now() + MS(newExpires);;
+	HeapifyDown(ref[id], heap.size());
 }
 
 void HeapTimer::Schedule(int id, int timeOut, const TimeoutCallBack &cb)

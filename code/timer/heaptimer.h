@@ -36,7 +36,7 @@ struct TimerNode {
 class HeapTimer {
 public:
 	HeapTimer() { heap.reserve(64); } //预分配内存，优化性能
-	~HeapTimer();
+	~HeapTimer() { clear(); }
 
 	//核心接口
 	void Reschedule(int id, int newExpires); // 调整指定ID的定时器超时时间
