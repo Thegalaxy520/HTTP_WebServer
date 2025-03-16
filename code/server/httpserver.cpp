@@ -4,7 +4,6 @@
 
 #include "httpserver.h"
 
-
 HttpServer::HttpServer(int port, int trigMode, int timeoutMs, bool OptLinger,
                        int sqlPort, const char *sqlUser, const char *sqlPwd,
                        const char *dbName, int connPoolNum, int threads, bool openLog, int logLevel, int logQueSize)

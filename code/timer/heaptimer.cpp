@@ -47,7 +47,7 @@ void HeapTimer::TriggerAndRemove(int id)
 }
 
 void HeapTimer::clear()
-{del_
+{
 	ref.clear();
 	heap.clear();
 }

@@ -16,6 +16,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "../timer/heaptimer.h"
+
+
 
 //服务器类
 class HttpServer {
@@ -47,6 +50,7 @@ private:
 	uint32_t listentEv_;
 	uint32_t connEv_;
 
+	std::unique_ptr<HeapTimer> timer_;
 
 };
 
