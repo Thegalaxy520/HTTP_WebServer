@@ -1,3 +1,0 @@
-/home/moon/github/HTTP_WebServer/cmake-build-debug/CMakeFiles/HTTP_WebServer.dir
-/home/moon/github/HTTP_WebServer/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/moon/github/HTTP_WebServer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
