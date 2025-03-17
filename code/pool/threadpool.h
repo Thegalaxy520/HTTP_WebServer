@@ -14,16 +14,18 @@
 class ThreadPool {
 public:
     // 构造函数，默认创建8个线程
-    explicit ThreadPool(size_t threadCount = 8): pool_(std::make_shared<Pool>()) {
+    explicit ThreadPool(size_t threadCount = 8): pool_(std::make_shared<Pool>()/*make_shared用于创建共享指针*/) {
             assert(threadCount > 0);  // 确保线程数合法
             for(size_t i = 0; i < threadCount; i++) {
                 // 创建工作线程（立即detach，不等待线程结束）
                 std::thread([pool = pool_] {  // 捕获共享的Pool对象
-                    std::unique_lock<std::mutex> locker(pool->mtx);  // 加锁保护共享数据
+                    std::unique_lock<std::mutex> locker(pool->mtx);
+                    // 从线程池中获取互斥锁，其他线程获取时会被已经获取的某一线程阻塞
                     while(true) {  // 线程主循环
                         // 有任务时处理任务
                         if(!pool->tasks.empty()) {
                             auto task = std::move(pool->tasks.front());  // 提取任务
+                            //std::move将左值转换成可被引用的右值
                             pool->tasks.pop();  // 移除已取出的任务
                             locker.unlock();    // 释放锁，允许其他线程操作队列
                             task();             // 执行任务（无锁状态下执行）
