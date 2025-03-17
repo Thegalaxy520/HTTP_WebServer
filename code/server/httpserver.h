@@ -18,6 +18,7 @@
 #include <arpa/inet.h>
 #include "../timer/heaptimer.h"
 #include "../pool/threadpool.h"
+#include "./epoller.h"
 
 
 
@@ -53,6 +54,7 @@ private:
 
 	std::unique_ptr<HeapTimer> timer_;
 	std::unique_ptr<ThreadPool> threadPool;
+	std::unique_ptr<Epoller> epoller;
 };
 
 

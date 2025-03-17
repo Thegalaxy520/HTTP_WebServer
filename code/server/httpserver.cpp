@@ -8,7 +8,7 @@ HttpServer::HttpServer(int port, int trigMode, int timeoutMs, bool OptLinger,
                        int sqlPort, const char *sqlUser, const char *sqlPwd,
                        const char *dbName, int connPoolNum, int threads, bool openLog, int logLevel, int logQueSize)
 	: port_(port), openLinger_(OptLinger), timeoutMS_(timeoutMs), isClose_(false),
-	  timer_(new HeapTimer()), threadPool(new ThreadPool(threads)), epoller_(new Epoller())
+	  timer_(new HeapTimer()), threadPool(new ThreadPool(threads)),epoller(new Epoller())
 {
 	srcDir_ = getcwd(nullptr, 256);
 	assert(srcDir_);
