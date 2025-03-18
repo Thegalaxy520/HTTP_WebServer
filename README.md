@@ -100,13 +100,9 @@ make
 
 
 ```bash
-bash复制# 进入压力测试工具目录 
-cd webbench-1.5 
- 
-# 编译压力测试工具 
-make && sudo make install 
- 
-# 执行压力测试（示例：10000并发持续10秒）
-webbench -c 10000 -t 10 http://localhost:1316/
+./webbench-1.5/webbench -c 100 -t 10 http://ip:port/
+./webbench-1.5/webbench -c 1000 -t 10 http://ip:port/
+./webbench-1.5/webbench -c 5000 -t 10 http://ip:port/
+./webbench-1.5/webbench -c 10000 -t 10 http://ip:port/
 ```
 
