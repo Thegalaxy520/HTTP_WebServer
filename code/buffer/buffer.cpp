@@ -99,6 +99,12 @@ void Buffer::Append(const Buffer& srcBuffer) {
     Append(srcBuffer.GetReadPointer(), srcBuffer.GetReadableBytes());
 }
 
+void Buffer::EnsureWriteCapacity(size_t len) {
+    if(GetWritableBytes() < len) {
+        ManageBufferSpace_(len);
+    }
+    // assert(GetReadableBytes() >= len);
+}
 /******************** I/O 操作 ********************/
 // 从文件描述符读取数据（支持大文件读取）
 ssize_t Buffer::ReadFromFD(int fd, int* errorCode) {
@@ -153,9 +159,11 @@ const char* Buffer::GetBufferStart_() const {
 
 // 内存空间管理核心算法（整理或扩容）
 void Buffer::ManageBufferSpace_(size_t required) {
-    if(GetWritableBytes() + GetReclaimableBytes() < required) {
-        // 情况1：需要扩容（每次扩容至少满足需求+1字节）
-        storage.resize(writePosition + required + 1);
+    size_t min_required = required - GetWritableBytes();
+    if (min_required > GetReclaimableBytes()) {
+        // 几何增长：新容量 = 当前容量 * 1.5 与需求取较大值
+        size_t new_capacity = std::max(storage.size()  * 3 / 2, writePosition + required);
+        storage.resize(new_capacity);
     } else {
         // 情况2：整理现有空间（移动有效数据到头部）
         size_t storedDataLength = GetReadableBytes();
