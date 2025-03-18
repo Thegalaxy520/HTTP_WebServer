@@ -96,7 +96,8 @@ make
 
 ## 4. 压力测试
 
-![image-20250318170124909](C:\Users\14111\AppData\Roaming\Typora\typora-user-images\image-20250318170124909.png)
+![image](https://github.com/user-attachments/assets/7ee25c8c-8fe0-48e4-a3cc-6db4f1a8a750)
+
 
 ```bash
 bash复制# 进入压力测试工具目录 
