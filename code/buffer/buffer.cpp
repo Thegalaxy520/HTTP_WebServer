@@ -8,34 +8,34 @@
 
 // 构造函数：初始化存储空间和读写位置
 Buffer::Buffer(int initialSize)
-    : storage_(initialSize),  // 预分配指定大小的内存
-      readPosition_(0),      // 读起始位置初始化
-      writePosition_(0) {}   // 写起始位置初始化
+    : storage(initialSize),  // 预分配指定大小的内存
+      readPosition(0),      // 读起始位置初始化
+      writePosition(0) {}   // 写起始位置初始化
 
 // 获取可读数据长度（写位置 - 读位置）
 size_t Buffer::GetReadableBytes() const {
-    return writePosition_ - readPosition_;
+    return writePosition - readPosition;
 }
 
 // 获取可写空间长度（总容量 - 写位置）
 size_t Buffer::GetWritableBytes() const {
-    return storage_.size() - writePosition_;
+    return storage.size() - writePosition;
 }
 
 // 获取可回收空间长度（读位置之前的空间）
 size_t Buffer::GetReclaimableBytes() const {
-    return readPosition_;
+    return readPosition;
 }
 
 // 获取当前读指针（不移动读位置）
 const char* Buffer::GetReadPointer() const {
-    return GetBufferStart_() + readPosition_;
+    return GetBufferStart_() + readPosition;
 }
 
 // 消费指定长度的数据（移动读位置）
 void Buffer::ConsumeData(size_t length) {
     assert(length <= GetReadableBytes());
-    readPosition_ += length;  // 原子操作保证线程安全
+    readPosition += length;  // 原子操作保证线程安全
 }
 
 // 消费数据直到指定指针位置（用于协议解析）
@@ -46,9 +46,9 @@ void Buffer::ConsumeUntil(const char* end) {
 
 // 重置缓冲区（清空数据并复位指针）
 void Buffer::ResetReadWritePositions() {
-    bzero(&storage_[0], storage_.size());  // 清空内存内容
-    readPosition_ = 0;                     // 原子读操作
-    writePosition_ = 0;                    // 原子写操作
+    bzero(&storage[0], storage.size());  // 清空内存内容
+    readPosition = 0;                     // 原子读操作
+    writePosition = 0;                    // 原子写操作
 }
 
 // 获取所有可读数据并重置缓冲区
@@ -60,17 +60,18 @@ std::string Buffer::ReadAllAsString() {
 
 // 获取当前写位置常量指针（用于只读访问）
 const char* Buffer::GetWriteConstPointer() const {
-    return GetBufferStart_() + writePosition_;
+    return GetBufferStart_() + writePosition;
 }
 
 // 获取当前写位置可修改指针（用于数据写入）
 char* Buffer::GetWritePointer() {
-    return GetBufferStart_() + writePosition_;
+    return GetBufferStart_() + writePosition;
 }
 
 // 提交已写入的数据长度（移动写位置）
+/*HasWritten*/
 void Buffer::CommitWrite(size_t length) {
-    writePosition_ += length;  // 原子操作保证线程安全
+    writePosition += length;  // 原子操作保证线程安全
 }
 
 /******************** 数据追加操作 ********************/
@@ -142,28 +143,28 @@ ssize_t Buffer::WriteToFD(int fd, int* errorCode) {
 /******************** 内部实现 ********************/
 // 获取存储空间起始地址（可修改版本）
 char* Buffer::GetBufferStart_() {
-    return &*storage_.begin();  // vector迭代器转原生指针
+    return &*storage.begin();  // vector迭代器转原生指针
 }
 
 // 获取存储空间起始地址（常量版本）
 const char* Buffer::GetBufferStart_() const {
-    return &*storage_.begin();
+    return &*storage.begin();
 }
 
 // 内存空间管理核心算法（整理或扩容）
 void Buffer::ManageBufferSpace_(size_t required) {
     if(GetWritableBytes() + GetReclaimableBytes() < required) {
         // 情况1：需要扩容（每次扩容至少满足需求+1字节）
-        storage_.resize(writePosition_ + required + 1);
+        storage.resize(writePosition + required + 1);
     } else {
         // 情况2：整理现有空间（移动有效数据到头部）
         size_t storedDataLength = GetReadableBytes();
-        std::copy(GetBufferStart_() + readPosition_,
-                 GetBufferStart_() + writePosition_,
+        std::copy(GetBufferStart_() + readPosition,
+                 GetBufferStart_() + writePosition,
                  GetBufferStart_());
         // 重置读写位置
-        readPosition_ = 0;
-        writePosition_ = storedDataLength;
+        readPosition = 0;
+        writePosition = storedDataLength;
         assert(storedDataLength == GetReadableBytes());
     }
 }

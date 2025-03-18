@@ -84,11 +84,11 @@ private:
 	void ManageBufferSpace_(size_t required);
 
 	// 数据存储容器（使用vector实现动态数组）
-	std::vector<char> storage_;
+	std::vector<char> storage;
 
 	// 原子操作的读写位置（保证多线程安全）
-	std::atomic<size_t> readPosition_; // 当前读位置索引
-	std::atomic<size_t> writePosition_; // 当前写位置索引
+	std::atomic<size_t> readPosition; // 当前读位置索引
+	std::atomic<size_t> writePosition; // 当前写位置索引
 };
 
 #endif //BUFFER_H
