@@ -69,6 +69,7 @@ char* Buffer::GetWritePointer() {
 }
 
 // 提交已写入的数据长度（移动写位置）
+/*HasWritten*/
 void Buffer::CommitWrite(size_t length) {
     writePosition += length;  // 原子操作保证线程安全
 }
